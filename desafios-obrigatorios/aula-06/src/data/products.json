@@ -1,0 +1,25 @@
+[{
+  "id": 1,
+  "title": "Chinelo",
+  "descriptiom": "Havaianas",
+  "price": 79,
+  "thumbnail": "chinelo.png",
+  "code": 10,
+  "stock": 12
+}, {
+  "id": 2,
+  "title": "Palmilha",
+  "description": "Para dores",
+  "price": 45,
+  "thumbnail": "palmilha.png",
+  "code": 20,
+  "stock": 0
+}, {
+  "id": 3,
+  "title": "Tenis",
+  "description": "Nike",
+  "price": 400,
+  "thumbnail": "nike.png",
+  "code": 50,
+  "stock": 20
+}]
