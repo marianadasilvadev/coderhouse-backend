@@ -20,7 +20,6 @@ app.get('/products', async (req, res) => {
       data: products.slice(0, limit)
     })
   } catch (error) {
-    console.log({ error })
     res.status(500).json({
       message: 'Internal server error'
     })
