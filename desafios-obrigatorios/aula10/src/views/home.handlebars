@@ -1,0 +1,26 @@
+<div>
+  <h1>Lista de produtos</h1>
+  <div class="products-list">
+    {{#each products}}
+      <form class="products-list__item" onsubmit="formDeleteOnSubmit(event, {{this.id}})">
+        <p>Nome: {{this.name}}</p>
+        <p>Descrição: {{this.description}}</p>
+        <p>Preço: R$ {{this.price}}</p>
+        <button type="submit">Deletar</button>
+      </form>
+    {{/each}}
+  </div>
+</div>
+
+<script>
+  const BASE_URL = 'http://localhost:8080/api'
+  function formDeleteOnSubmit(event, productId) {
+    event.preventDefault()
+
+    fetch(`${BASE_URL}/products/${productId}`, {
+      method: 'DELETE'
+    }).then((res) => {
+      window.location.reload();
+    })
+  }
+</script>

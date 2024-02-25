@@ -1,0 +1,107 @@
+<div class="real-time-wrapper">
+  <form id="product-form">
+    <h1>Criar novo produto</h1>
+    <div>
+      <label>Nome do produto</label>
+      <br />
+      <input type="text" name="name" />
+    </div>
+    <div>
+      <label>Descrição</label>
+      <br />
+      <input type="text" name="description" />
+    </div>
+    <div>
+      <label>Preço</label>
+      <br />
+      <input type="text" name="price" />
+    </div>
+    <br />
+    <button type="submit">Salvar</button>
+  </form>
+  <div>
+    <h1>Lista de produtos</h1>
+    <div id="products-list" class="products-list">
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const BASE_URL = 'http://localhost:8080/api'
+
+  const socketIo = io()
+
+  const productsList = document.getElementById('products-list')
+
+  const deleteProduct = (id) => {
+    fetch(`${BASE_URL}/products/${id}`, {
+      method: 'DELETE'
+    }).then(() => {
+      socketIo.emit('load-products-client')
+    })
+  }
+
+  const buildProductsList = (product) => {
+    const div = document.createElement('div')
+    div.classList.add('products-list__item')
+
+    const pName = document.createElement('p')
+    pName.textContent = `Nome: ${product.name}`
+
+    const pDescription = document.createElement('p')
+    pDescription.textContent = `Descrição: ${product.description}`
+
+    const pPrice = document.createElement('p')
+    pPrice.textContent = `Preço: ${product.price}`
+
+    const button = document.createElement('button')
+    button.addEventListener('click', () => {
+      deleteProduct(product.id)
+    })
+    button.textContent = 'Deletar'
+
+    div.appendChild(pName)
+    div.appendChild(pDescription)
+    div.appendChild(pPrice)
+    div.appendChild(button)
+    productsList.appendChild(div)
+  }
+
+  socketIo.emit('load-products-client')
+
+  socketIo.on('load-products-server', products => {
+    productsList.innerHTML = ''
+    if (Array.isArray(products)) {
+      for (let product of products) {
+        buildProductsList(product)
+      }
+    }
+  })
+  
+  const form = document.getElementById('product-form')
+
+  form.addEventListener('submit', e => {
+    e.preventDefault()
+
+    const nameInput = document.getElementsByName('name')[0]
+    const descriptionInput = document.getElementsByName('description')[0]
+    const priceInput = document.getElementsByName('price')[0]
+
+    fetch(`${BASE_URL}/products`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify({
+        name: nameInput.value,
+        description: descriptionInput.value,
+        price: priceInput.value
+      })
+    }).then(() => {
+      socketIo.emit('load-products-client')
+    })
+  })
+
+</script>
